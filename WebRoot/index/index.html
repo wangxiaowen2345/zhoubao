@@ -1,0 +1,65 @@
+#@layout()
+#define main()
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<script type="text/javascript" src="/js/jquery-1.11.0.min.js"></script> 
+<script type="text/javascript" src="/js/i18n/grid.locale-en.js"></script>
+<script type="text/javascript" src="/src/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="/src/echarts.min.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="/css/ui.jqgrid-bootstrap.css" />
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<meta charset="utf-8" />
+<title>金水国册投资咨询有限公司周报系统</title>
+</head>
+<body>
+
+ <div id="main1" style="float:left;width: 600px;height:400px;"></div>
+<!--  <div id="main2" style="float:left;width: 600px;height:400px;"></div> -->
+    <script>
+        // 绘制图表。
+        echarts.init(document.getElementById('main1')).setOption({
+            series: {
+                type: 'pie',
+               
+                data: [
+                    {name: '已汇报'+'#(shuju.huibao)'+'人', value: #(shuju.huibao)},
+                    {name: '未汇报'+'#(shuju.weihuibao)'+'人', value: #(shuju.weihuibao)}
+                ]
+            },
+            title: {
+		        text: '日报汇报情况',
+		        left: 'center',
+		        top: 0,
+		        textStyle: {
+		            color: '#ccc'
+		        }
+		    },
+        });
+          // 绘制图表。
+        /* echarts.init(document.getElementById('main2')).setOption({
+            series: {
+                type: 'pie',
+               
+                data: [
+                    {name: '已汇报'+'#(shuju.zbhuibao)'+'人', value: #(shuju.zbhuibao)},
+                    {name: '未汇报'+'#(shuju.zbweihuibao)'+'人', value: #(shuju.zbweihuibao)}
+                ]
+            },
+            title: {
+		        text: '周报汇报情况',
+		        left: 'center',
+		        top: 0,
+		        textStyle: {
+		            color: '#ccc'
+		        }
+		    },
+        }); */
+        
+        
+    </script>
+</body>
+</html>
+#end

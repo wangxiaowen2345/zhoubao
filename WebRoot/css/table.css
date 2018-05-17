@@ -1,0 +1,16 @@
+.tab_style{
+
+}
+.tab_style td{
+	padding: 10px;
+	text-align: center;
+	background: white;
+}
+.tab_style td textarea{
+	height: 100%; 
+	width: 100%; 
+	overflow:auto; 
+	background-attachment:fixed; 
+	background-repeat:no-repeat; 
+	border-style:none; 
+	}

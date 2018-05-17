@@ -1,0 +1,73 @@
+#@layout()
+#define main()
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="/js/ajaxfileupload.js"></script>
+    <script type="text/javascript" src="/src/jquery.jqGrid.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/table.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/ui.jqgrid-bootstrap.css" />
+    <meta charset="utf-8" />
+    <title>周报</title>
+    <style type="text/css">
+    .tab_style{width:80%;}
+    </style>
+</head>
+<body>
+<div style="margin-left:20px;">
+<from>
+   <table class="tab_style" border="1" id="maintab">
+   	
+   	<tr>
+   		
+		<td colspan="3">工作总结部门：
+			<select id="depid">
+				#for(x:deplist)
+				<option value="#(x.id)">#(x.depname)</option>
+				#end
+			</select>
+		</td>
+   		<td colspan="3">姓名：
+   			<select id="userid">
+				#for(x:userlist)
+				<option value="#(x.id)">#(x.username)</option>
+				#end
+			</select>
+   		</td>
+   		<td colspan="2" id="weekofyear">第#(weekofyear)周</td>
+   	</tr>
+   	
+   	<tr id="trid">
+   		<td colspan="3">工作内容</td>
+   		<td>完成时间</td>
+   		<td colspan="3">存在问题、解决方案及改善措施</td>
+   		<td>备注</td>
+   	</tr>
+   	
+   		
+   		#for(x:zbinfo)
+   		<tr>
+   		<script type="text/javascript">
+		$("#depid").val(#(x.depid));
+		$("#userid").val(#(x.userid)); 
+	    </script>
+   		<td  colspan="3"><textarea rows="4" cols="" id="data10">#(x.content)</textarea></td>
+   		<td><textarea rows="4" cols="" id="data10">#date(x.time,"EEEE")</textarea></td>
+   		<td colspan="3"><textarea rows="4" cols="" id="data10">#(x.problem==""?"无":x.problem)</textarea></td>
+   		<td><textarea rows="4" cols="" id="data10">#(x.beizhu==""?"无":x.beizhu)</textarea></td>
+   		</tr>
+		#end
+   	
+   	
+   </table>
+</from>
+</div>
+  
+
+</body>
+</html>
+#end

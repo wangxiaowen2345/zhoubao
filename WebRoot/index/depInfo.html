@@ -1,0 +1,221 @@
+﻿#@layout()
+#define main()
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script type="text/javascript" src="/js/jquery-1.11.0.min.js"></script> 
+    <script type="text/javascript" src="/js/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="/src/jquery.jqGrid.js"></script>
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/table.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/ui.jqgrid-bootstrap.css" />
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+	<link rel="stylesheet" href="/css/common.css"/>
+    <meta charset="utf-8" />
+    <title>部门管理</title>
+</head>
+
+<body>
+
+ 
+					<div class="message-manage info-center">
+						<div class="page-header">
+	                      <div class="pull-left">
+							<h4>部门</h4>      
+						</div>
+	                                     </div>
+						<div class="manage-detail">
+							<div class="margin-tb manage-detail-con clearfix">
+								<a class="h5 recharge pull-left box"  href="javascript:;">添加部门</a>
+							</div>
+						</div>
+						<div class="manage-record">
+							<h6 class="margin-big-top">
+	                        <span class="pull-left manage-title border-bottom-main">部门列表</span>
+							
+							</h6>
+							<div class="clearfix"></div>
+	                        <div class="table-margin">
+	                          <table class="table table-bordered table-header">
+	                          <thead>
+	                             <tr>
+	                               <td class="w45">部门名</td>
+	                               <td class="w25">部门领导</td>
+	                               <td class="w20">操作</td>
+	                             </tr>
+	                             </thead>
+	                             <tbody>
+	                             #for(x:list.getList())
+	                             <tr>
+	                              <td>#(x.depname)</td>
+	                              <td>#(userById(x.userid).username)</td>
+	                              <td>
+									<a class="box" href="javascript:;" onclick="editcourse('#(x.id)')">编辑</a>
+									<a href="javascript:;" onclick="deletedep('#(x.id)')">删除</a>
+								  </td>
+	                             </tr>
+	                             #end
+	                             </tbody>
+	                          </table>
+	                          <div class="page">
+	                          #@paginate(list.pageNumber, list.totalPage, "/dep/")
+	                          </div>
+	                        </div>
+	                     
+						</div>
+					</div>
+			<div class="clearfix"></div>
+			<div class="show-page padding-big-right hidden">
+				<div class="page">
+				</div>
+			</div>
+			<div id="dialogBg"></div>
+				<div id="dialog" class="animated">
+					<div class="dialogTop">
+						<a href="javascript:window.location.reload();" class="claseDialogBtn">关闭</a>
+					</div>
+					<form action="/adddep" method="post" id="editForm">
+						<ul class="editInfos">
+							<li><label><font color="#ff0000">* </font>部门名称：<input type="text" id="depname" required value="" class="ipt" /></label></li>
+							<li><label><font color="#ff0000">* </font>部门领导：
+									<select id="depid">
+										<option vaule="0">无</option>
+										#for(x:userlist)
+										<option value="#(x.id)">#(x.username)</option>
+										#end
+									</select>
+
+								</label></li>
+							<li id="input_onclick"><input id="edit_input" onclick="adddep()" value="确认提交" class="submitBtn claseDialogBtn" /></li>
+						</ul>
+					</form>
+				</div>
+	<script type="text/javascript">
+	function editcourse(id){
+	var id = id;
+
+		$.post("/editDepById",{id:id},
+		function(data){
+			$("#input_onclick").empty();
+           	$("#input_onclick").append("<input id=\"edit_input\" onclick=\"doedit('"
+           	+data.id+"')\" value=\"确认提交\" class=\"submitBtn claseDialogBtn\" />"); 
+			
+			$("#depname").val(data.depname);
+			
+			var index = data.userid;
+			var options = document.getElementById("depid").children;
+			if(data.depid =='0'){
+				options[0].selected=true;
+			}
+			else{
+				$("#depid").val(index); 
+           	}
+           	
+           	  
+			/* $("#edit_input").onclick=function(){
+				var recoursename=$("#coursename").val();
+				var recoursecon=$("#coursecon").val();
+				var recoursefid = $("#coursefid option:selected")[0].value;
+			   doedit(data.id,recoursename,recoursecon,recoursefid);
+			}; */ 
+		}
+		,"json"); 
+	}
+	
+	function doedit(id){
+		var depname=$("#depname").val();
+		var depid = $("#depid option:selected")[0].value;
+		$.post("/doeditDep",{id:id,depname:depname,depid:depid},
+		function(data){
+			if(data.code=="200"){
+				alert(data.msg);
+			}
+			else
+				alert(data.msg);
+			
+			window.location.reload();
+		}
+		,"json");
+	}
+	
+	$(function(){
+	  /*左侧鼠标移入提示功能*/
+			$(".sBox ul li").mouseenter(function(){
+				if($(this).find("span:last-child").css("display")=="none")
+				{$(this).find("div").show();}
+				}).mouseleave(function(){$(this).find("div").hide();});
+	});
+	
+	function adddep(){
+	var depname = $("#depname").val();
+	var depid = $("#depid option:selected")[0].value;
+	
+	
+		$.post("/adddep",{depname:depname,depid:depid},
+		function(data){
+			if(data.code=="200"){
+				alert(data.msg);
+			}
+			else
+				alert("操作失败！");
+			window.location.reload();
+		}
+		,"json");
+	}
+	
+	function deletedep(id){
+	var id = id;
+	var msg = "您真的确定要删除吗？\n\n请确认！"; 
+	if (confirm(msg)==true){ 
+		$.post("/deleteDep",{id:id},
+		function(data){
+			if(data.code=="200"){
+				alert(data.msg);
+			}
+			else
+				alert("操作失败！");
+			
+			window.location.reload();
+		}
+		,"json"); 
+	}
+	else{
+		return false;
+	}
+	}
+	
+	</script>
+	<script type="text/javascript">
+	var w,h,className;
+	function getSrceenWH(){
+		w = $(window).width();
+		h = $(window).height();
+		$('#dialogBg').width(w).height(h);
+	}
+	window.onresize = function(){  
+		getSrceenWH();
+	}; 
+	$(window).resize();  
+	
+	$(function(){
+		getSrceenWH();
+		
+		//显示弹框
+		$('.box').click(function(){
+			className = "bounceInDown";
+			$('#dialogBg').fadeIn(300);
+			$('#dialog').removeAttr('class').addClass('animated '+className+'').fadeIn();
+		});
+		
+		//关闭弹窗
+		$('.claseDialogBtn').click(function(){
+			$('#dialogBg').fadeOut(300,function(){
+				$('#dialog').addClass('bounceOutUp').fadeOut();
+			});
+		});
+	});
+	</script>
+</body>
+</html>
+
+#end

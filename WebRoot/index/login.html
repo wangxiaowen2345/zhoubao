@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no"/>
+<title>金水国册投资咨询有限公司内部系统</title>
+#include("link.html")
+<style>
+	input:focus { outline: none; }
+	.posi{
+		height:280px;
+		width:24%;
+		margin-left: 38%;
+		margin-right: 38%;
+		margin-top:17%;
+		background: white;
+		border-radius:5px;
+		text-align: center;
+		background: linear-gradient(45deg, #35394a 0%, #1f222e 100%);
+		}
+		
+	.posi_company{
+		font-family: "微软雅黑";
+		font-weight: normal;
+		font-size: 20px;
+		color:#ffffff;
+		margin-top: 20px;
+		margin-bottom: 20px;
+		line-height: 80px;
+		}
+	.login_form{
+		margin: 15px 0px 15px 0px;
+		width: 100%;
+		background: rgba(255,255,255,1);
+		border: 0px ;
+	}
+	
+	.login_form_input{
+		width: 80%;
+		height: 40px;
+		border: 0px ;
+	}
+	.login_form_button{
+		border: 0px;
+		border-radius: 5px;
+		width: 30%;
+		background-color: #03a9f4;
+		color: white;
+		font-size: 16px;
+		height: 40px;
+		margin: 15px 0px 15px 0px;
+	}
+</style>
+</head>
+
+<body style="height: 1200px;overflow:hidden;
+		background: linear-gradient(45deg, #03a9f4 0%, #f3a9f0 100%);">
+<div class="posi">
+	<div class="posi_company">
+		后台登录系统
+	</div>
+	<form class="posi_form" action="/dologin" method="post"> 
+		<div class="login_form">
+			<input class="login_form_input" id="username" name="username" type="text" placeholder="用户名"/>
+		</div>
+		<div class="login_form">
+			<input id="pwd" name="pwd" class="login_form_input" type="password" placeholder="密码"/>
+		</div>
+		<button class="login_form_button" onclick="sub()" id="submit">登录</button>
+	</form>
+</div>
+
+<script type="text/javascript">
+	
+function sub(){
+	$("#submit").submit();
+	
+}
+</script>
+</body>
+</html>

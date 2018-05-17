@@ -1,0 +1,211 @@
+#@layout()
+#define main()
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="/js/ajaxfileupload.js"></script>
+    <script type="text/javascript" src="/src/jquery.jqGrid.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/table.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/ui.jqgrid-bootstrap.css" />
+    <meta charset="utf-8" />
+    <title>周报</title>
+</head>
+<body>
+<div style="margin-left:20px;">
+<from>
+   <table class="tab_style" border="1" id="maintab">
+   	<tr>
+   		<td  colspan="6">
+   			<a href="javascript:add()" class="positionadd"><span class="glyphicon glyphicon-plus"></span></a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+   			<a href="javascript:savedata()" class="positionadd"><span class="glyphicon glyphicon-ok"></span></a>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+   			
+   			<form method="post" action="/upload" class="formposi" enctype="multipart/form-data" id="formposi" >  
+			    <input type="file" id="file" name="file" class="uploadhidden">
+			    <div class="input-group">
+				  <span class="input-group-addon">选择文件</span>
+				  <input type="text" id="aim" class="form-control" >
+				  <span class="input-group-addon" id="formnull">清空</span>
+				  <span class="input-group-addon" id="formsub">上传</span>
+				</div>
+			</form> 
+			 <script type="text/javascript">
+			$("#file").on('change', function( e ){
+			    //e.currentTarget.files 是一个数组，如果支持多个文件，则需要遍历
+			    var name = e.currentTarget.files[0].name;
+			    $("#aim").val( name );
+			});
+			$("#formsub").on('click', function( e ){
+				console.log(e);
+				
+				$.ajaxFileUpload({  
+				    type: "POST",  
+				    url: "/upload",
+				    secureuri : false,//是否启用安全提交，默认为false  
+				    fileElementId:"file",//文件选择框的id属性  
+				    dataType: "json",//服务器返回的格式  
+				    async : false,  
+				    success: function(data){  
+				        if(data.code=="200"){  
+				            $("#aim").val(data.img);
+				            
+				           alert("上传成功"); 
+				        }else{  
+				           alert("上传错误，请重试！"); 
+				        }  
+				    },  
+				    error: function (data, status, e){  
+				        
+				    }  
+				}); 
+			});
+			$("#formnull").on('click', function( e ){
+				console.log(e);
+				$("#aim").val("");
+				});
+			
+			</script>
+   		</td>
+   		
+   	</tr>
+   	<tr>
+   		<td colspan="1">周报类型：
+			<select id="typeid">
+				
+				<option value="0">本周总结</option>
+				<option value="1">下周计划</option>
+				
+			</select>
+		</td>
+		<td colspan="3">工作总结部门：
+			<select id="depid">
+				#for(x:deplist)
+				<option value="#(x.id)">#(x.depname)</option>
+				#end
+			</select>
+		</td>
+   		<td colspan="1">姓名：
+   			<select id="userid">
+				#for(x:userlist)
+				<option value="#(x.id)">#(x.username)</option>
+				#end
+			</select>
+   		</td>
+   		<td colspan="1" id="weekofyear">第#(weekofyear)周</td>
+   	</tr>
+   	
+   	<tr id="trid">
+   		<td>工作内容</td>
+   		<td>完成时间</td>
+   		<td>完成结果</td>
+   		<td>存在问题</td>
+   		<td>解决方案及改善措施</td>
+   		<td>备注</td>
+   	</tr>
+   	<tr>
+   		<td><textarea rows="4" cols="" id="data10"></textarea></td>
+   		<td><textarea rows="4" cols="" id="data11"></textarea></td>
+   		<td><textarea rows="4" cols="" id="data12"></textarea></td>
+   		<td><textarea rows="4" cols="" id="data13"></textarea></td>
+   		<td><textarea rows="4" cols="" id="data14"></textarea></td>
+   		<td><textarea rows="4" cols="" id="data15"></textarea></td>
+   	</tr>
+   	
+   
+   	
+   	<tr>
+   		<td style="text-align: left;" colspan="6" >工作自评：<textarea rows="4" cols="" id="workremark"></textarea></td>
+   		
+   	</tr>
+   	<tr>
+   		<td style="text-align: left;" colspan="6" >个人工作：<textarea rows="4" cols="" id="userremark"></textarea></td>
+   		
+   	</tr>
+   	<tr>
+   		<td style="text-align: left;" colspan="6" >部门工作：<textarea rows="4" cols="" id="depremark"></textarea></td>
+   		
+   	</tr>
+   </table>
+</from>
+</div>
+    <script type="text/javascript">
+    var temp = 1;
+    
+    var workdata = new Array();
+    function add(){
+	    
+	    temp++;
+	    
+	    var maintab=document.getElementById("maintab");
+		var firsttr=document.getElementById("firsttr");
+	    var maintabtbody=maintab.childNodes[1];
+	    var maintabtbodytb=maintabtbody.childNodes[4];               
+		$("#trid").after("<tr><td><textarea rows=\"4\" cols=\"\" id=\"data"+temp+"0\"></textarea></td>"+
+			"<td><textarea rows=\"4\" cols=\"\" id=\"data"+temp+"1\"></textarea></td>"+
+	   		"<td><textarea rows=\"4\" cols=\"\" id=\"data"+temp+"2\"></textarea></td>"+
+	   		"<td><textarea rows=\"4\" cols=\"\" id=\"data"+temp+"3\"></textarea></td>"+
+	   		"<td><textarea rows=\"4\" cols=\"\" id=\"data"+temp+"4\"></textarea></td>"+
+	   		"<td><textarea rows=\"4\" cols=\"\" id=\"data"+temp+"5\"></textarea></td></tr>");
+	   		
+	   	
+    }
+    	
+    function arraydata(){
+    	var data;
+		var temp1 = 1;
+   		
+   		for(var j = 0;j<temp;j++){
+	   		
+	   		data = new Array();
+	   		workdata[temp1] = data;
+   		
+	   		for(var i = 0 ;i<6;i++){
+	   			var id = "#data"+temp1+i;
+	   			var con =  $(id).val();
+	   			if(""==con){
+		   			data[i] = "无";
+	   			}
+	   			else{
+	   				data[i] = con;
+	   				}
+	   		}
+	   		
+	   		temp1++;
+	   		
+   		}
+   		console.log(workdata);
+    }
+    
+    function savedata(){
+    	arraydata();
+    	
+		var typeid = $("#typeid option:selected")[0].value;
+		var depid = $("#depid option:selected")[0].value;
+		var userid = $("#userid option:selected")[0].value;
+		var weekofyear = #(weekofyear);
+		var workremark = $("#workremark").val();
+		var img = $("#aim").val();
+		var userremark = $("#userremark").val();
+		var depremark = $("#depremark").val();
+		var a = JSON.stringify(workdata);
+		
+		
+    	$.post("/addzhoubao",{img:img,typeid:typeid,depid:depid,userid:userid,weekofyear:weekofyear,workremark:workremark,userremark:userremark,depremark:depremark,workdata:a},
+    	function(data){
+    		if(data.code=="200"){
+				alert(data.msg);
+			}
+			else
+				alert(data.msg);
+			
+			window.location.reload();
+    	},"json");
+    }
+    </script>
+
+</body>
+</html>
+#end

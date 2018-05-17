@@ -1,0 +1,275 @@
+﻿#@layout()
+#define main()
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script type="text/javascript" src="/js/jquery-1.11.0.min.js"></script> 
+    <script type="text/javascript" src="/js/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="/src/jquery.jqGrid.js"></script>
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/table.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/ui.jqgrid-bootstrap.css" />
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+	<link rel="stylesheet" href="/css/common.css"/>
+    <meta charset="utf-8" />
+    <title>周报管理</title>
+</head>
+
+<body>
+
+					<div class="message-manage info-center">
+						<div class="page-header">
+	                      <div class="pull-left">
+							<h4>周报管理</h4>      
+					      </div>
+	                    </div>
+						
+						<div class="manage-record">
+							<h6 class="margin-big-top">
+	                        <span class="pull-left manage-title border-bottom-main">周报列表</span>
+							
+							</h6>
+							<div class="clearfix"></div>
+	                        <div class="table-margin">
+	                          <table class="table table-bordered table-header">
+	                          <thead>
+	                             <tr>
+	                               <td class="w25">周报日期</td>
+	                               <td class="w20">周报类型</td>
+	                               <td class="w25">用户</td>
+	                               <td class="w15">操作</td>
+	                             </tr>
+	                             </thead>
+	                             <tbody>
+	                             
+	                             #for(x:list.getList())
+	                            
+	                             
+		                             #if(admin_user.power.toInt()==0.toInt())
+			                             #if(admin_user.id.toInt()==x.userid.toInt())
+			                             <tr>
+			                              <td><a href="/zhoubao?id=#(x.id)">第#(jsonToData(x.weekinfo).weekofyear)周</a></td>
+			                              <td>#if(x.type.toInt()==1)下周计划#elseif(x.type.toInt()==0)本周总结#end</td>
+			                              <td>#(userById(x.userid).username)</td>
+			                              <td>
+											<a href="/zhoubao?id=#(x.id)">编辑</a>
+											<a href="javascript:;" onclick="deletezb('#(x.id)')">删除</a>
+										  </td>
+			                             </tr>
+			                             #end
+		                             #elseif(admin_user.power.toInt()==3.toInt())
+		                             	<tr>
+		                              <td><a href="/zhoubao?id=#(x.id)">第#(jsonToData(x.weekinfo).weekofyear)周</a></td>
+		                              <td>#if(x.type.toInt()==1)下周计划#elseif(x.type.toInt()==0)本周总结#end</td>
+		                              <td>#(userById(x.userid).username)</td>
+		                              <td>
+										<a href="/zhoubao?id=#(x.id)">编辑</a>
+										<a href="javascript:;" onclick="deletezb('#(x.id)')">删除</a>
+									  </td>
+		                             </tr>
+		                             #elseif(admin_user.power.toInt()==userById(x.userid).depid.toInt())
+		                             	<tr>
+		                              <td><a href="/zhoubao?id=#(x.id)">第#(jsonToData(x.weekinfo).weekofyear)周</a></td>
+		                              <td>#if(x.type.toInt()==1)下周计划#elseif(x.type.toInt()==0)本周总结#end</td>
+		                              <td>#(userById(x.userid).username)</td>
+		                              <td>
+										<a href="/zhoubao?id=#(x.id)">编辑</a>
+										<a href="javascript:;" onclick="deletezb('#(x.id)')">删除</a>
+									  </td>
+		                             </tr>
+		                             #end
+		                           #end
+	                             </tbody>
+	                          </table>
+	                          <div class="page">
+	                          #set(append = "?weekofyear=" + weekofyear)
+	                          #@paginate(list.pageNumber, list.totalPage, "/zhoubaoinfo/")
+	                          </div>
+	                         
+	                        </div>
+	                     
+						</div>
+					</div>
+			<div class="clearfix"></div>
+			<div class="show-page padding-big-right hidden">
+				<div class="page">
+				</div>
+			</div>
+			<div id="dialogBg"></div>
+				<div id="dialog" class="animated">
+					<div class="dialogTop">
+						<a href="javascript:window.location.reload();" class="claseDialogBtn">关闭</a>
+					</div>
+					<form action="/adduser" method="post" id="editForm">
+						<ul class="editInfos">
+							<li><label><font color="#ff0000">* </font>用户名：<input type="text" id="username" required value="" class="ipt" /></label></li>
+							<li><label><font color="#ff0000">* </font>用户密码：<input type="text" id="pwd" required value="" class="ipt" /></label></li>
+							<li><label><font color="#ff0000">* </font>手机号：<input type="text" id="tel" required value="" class="ipt" /></label></li>
+							<li><label><font color="#ff0000">* </font>所属部门：
+									<select id="depid">
+										<option vaule="0">无</option>
+										#for(x:deplist)
+										<option value="#(x.id)">#(x.depname)</option>
+										#end
+									</select>
+
+								</label></li>
+							<li id="input_onclick"><input id="edit_input" onclick="adduser()" value="确认提交" class="submitBtn claseDialogBtn" /></li>
+						</ul>
+					</form>
+				</div>
+	<script type="text/javascript">
+	function edituser(id){
+	var id = id;
+
+		$.post("/editUserById",{id:id},
+		function(data){
+			$("#input_onclick").empty();
+           	$("#input_onclick").append("<input id=\"edit_input\" onclick=\"doedit('"
+           	+data.id+"')\" value=\"确认提交\" class=\"submitBtn claseDialogBtn\" />"); 
+			
+			$("#username").val(data.username);
+			$("#pwd").val(data.pwd);
+			$("#tel").val(data.tel);
+			
+			var index = data.depid;
+			var options = document.getElementById("depid").children;
+			if(data.depid =='0'){
+				options[0].selected=true;
+			}
+			else{
+				$("#depid").val(index); 
+           	}
+           	
+           	  
+			/* $("#edit_input").onclick=function(){
+				var recoursename=$("#coursename").val();
+				var recoursecon=$("#coursecon").val();
+				var recoursefid = $("#coursefid option:selected")[0].value;
+			   doedit(data.id,recoursename,recoursecon,recoursefid);
+			}; */ 
+		}
+		,"json"); 
+	}
+	
+	function doedit(id){
+		var username=$("#username").val();
+		var tel=$("#tel").val();
+		var pwd=$("#pwd").val();
+		var depid = $("#depid option:selected")[0].value;
+		$.post("/doeditUser",{id:id,username:username,tel:tel,pwd:pwd,depid:depid},
+		function(data){
+			if(data.code=="200"){
+				alert(data.msg);
+			}
+			else
+				alert(data.msg);
+			
+			window.location.reload();
+		}
+		,"json");
+	}
+	
+	$(function(){
+	  /*左侧鼠标移入提示功能*/
+			$(".sBox ul li").mouseenter(function(){
+				if($(this).find("span:last-child").css("display")=="none")
+				{$(this).find("div").show();}
+				}).mouseleave(function(){$(this).find("div").hide();});
+	});
+	
+	function adduser(){
+	var username = $("#username").val();
+	var pwd = $("#pwd").val();
+	var tel = $("#tel").val();
+	var depid = $("#depid option:selected")[0].value;
+	
+	
+		$.post("/adduser",{username:username,pwd:pwd,tel:tel,depid:depid},
+		function(data){
+			if(data.code=="200"){
+				alert(data.msg);
+			}
+			else
+				alert("操作失败！");
+			window.location.reload();
+		}
+		,"json");
+	}
+	
+	function deletecourse(id){
+	var id = id;
+	var msg = "您真的确定要删除吗？\n\n请确认！"; 
+	if (confirm(msg)==true){ 
+		$.post("/admin/deleteTitle",{id:id},
+		function(data){
+			if(data.code=="200"){
+				alert(data.msg);
+			}
+			else
+				alert("操作失败！");
+			
+			window.location.reload();
+		}
+		,"json"); 
+	}
+	else{
+		return false;
+	}
+	}
+	
+	function deletezb(id){
+	var id = id;
+	var msg = "您真的确定要删除吗？\n\n请确认！"; 
+	if (confirm(msg)==true){ 
+		$.post("/deleteZb",{id:id},
+		function(data){
+			if(data.code=="200"){
+				alert(data.msg);
+			}
+			else
+				alert("操作失败！");
+			
+			window.location.reload();
+		}
+		,"json"); 
+	}
+	else{
+		return false;
+	}
+	}
+	</script>
+	<script type="text/javascript">
+	var w,h,className;
+	function getSrceenWH(){
+		w = $(window).width();
+		h = $(window).height();
+		$('#dialogBg').width(w).height(h);
+	}
+	window.onresize = function(){  
+		getSrceenWH();
+	}; 
+	$(window).resize();  
+	
+	$(function(){
+		getSrceenWH();
+		
+		//显示弹框
+		$('.box').click(function(){
+			className = "bounceInDown";
+			$('#dialogBg').fadeIn(300);
+			$('#dialog').removeAttr('class').addClass('animated '+className+'').fadeIn();
+		});
+		
+		//关闭弹窗
+		$('.claseDialogBtn').click(function(){
+			$('#dialogBg').fadeOut(300,function(){
+				$('#dialog').addClass('bounceOutUp').fadeOut();
+			});
+		});
+	});
+	</script>
+</body>
+</html>
+
+#end

@@ -1,0 +1,46 @@
+﻿
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script type="text/javascript" src="/js/jquery-1.11.0.min.js"></script> 
+    <script type="text/javascript" src="/js/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="/src/jquery.jqGrid.js"></script>
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/table.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/ui.jqgrid-bootstrap.css" />
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+	<link rel="stylesheet" href="/css/common.css"/>
+	<script src="/js/layer.js"></script>
+    <meta charset="utf-8" />
+    <title>周报管理</title>
+</head>
+
+<body>
+<form  method="post" id="editForm">
+	<ul class="editInfos">
+		<li><label style="line-height: 20px;text-align: center;">审批意见：</label></li>
+		<li><label><textarea class="ipt" style="width: 400px" id="con"></textarea></label></li>
+		<li id="input_onclick"><input id="edit_input"  value="确认提交"  onclick="addshenpi()" class="submitBtn claseDialogBtn" /></li>
+	</ul>
+</form>
+<script type="text/javascript">
+	function addshenpi(){
+	var con = $("#con").val();
+	
+	
+		$.post("/refuseshenpistep",{con:con,shenpiid:#(shenpiid)},
+		function(data){
+			if(data.code=="200"){
+				alert(data.msg);
+			}
+			else
+				alert("操作失败！");
+			window.location.reload();
+		}
+		,"json");
+		
+		
+	}
+</script>	
+</body>
+</html>

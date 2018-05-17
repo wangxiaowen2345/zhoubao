@@ -1,0 +1,65 @@
+﻿#@layout()
+#define main()
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script type="text/javascript" src="/js/jquery-1.11.0.min.js"></script> 
+    <script type="text/javascript" src="/js/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="/src/jquery.jqGrid.js"></script>
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/table.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/ui.jqgrid-bootstrap.css" />
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="/js/layer.js"></script>
+	 <link rel="stylesheet" href="//res.layui.com/layui/dist/css/layui.css"  media="all">
+	<link rel="stylesheet" href="/css/common.css"/>
+    <meta charset="utf-8" />
+    <title>部门管理</title>
+</head>
+
+<body>
+
+ 
+<div class="message-manage info-center">
+	<div class="page-header">
+        <div class="pull-left">
+			<h4>审批管理</h4>      
+	  	</div>
+   	</div>
+</div>
+<br>
+<ul class="layui-timeline">
+<br>
+    #for(x:list)
+    #if(for.first)
+    <li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+    <div class="layui-timeline-content layui-text">
+      <h3 class="layui-timeline-title">#date(x.time, "yyyy年MM月dd日 HH:mm:ss")</h3>
+      <p>
+        	#(userById(x.instep).username)发起了审批程序。
+        
+      </p>
+    </div>
+  </li>
+    #else
+   <li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+    <div class="layui-timeline-content layui-text">
+      <h3 class="layui-timeline-title">#date(x.time, "yyyy年MM月dd日 HH:mm:ss")</h3>
+      <p>
+        	经#(userById(x.instep).username)审批，结果为#if(x.agree=='0')审批通过。#elseif(x.agree=='1')审批不通过。#end
+       
+        <br>审批意见：#(x.content==null?"无":x.content)
+         <br>下任审批：#(userById(x.nextstep).username)
+        <br>
+      </p>
+    </div>
+  </li>
+  #end
+  #end
+</ul>			
+</body>
+</html>
+
+#end
