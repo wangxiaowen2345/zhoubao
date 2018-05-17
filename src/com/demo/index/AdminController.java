@@ -1191,11 +1191,20 @@ public class AdminController extends Controller {
 	}
 	
 
-	public List<Contract> contractById(int id) {
+	public List<Contract> contractById(int id) throws Exception {
 		
+		SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
 		
 		ContractService c = new ContractService();
 		List<Contract> cl = c.selectAllByUserid(id);
+		for(Contract cc:cl){
+			String fromDate = s.format(cc.getPaytime());  
+			String toDate = s.format(new Date());  
+			long from = s.parse(fromDate).getTime();  
+			long to = s.parse(toDate).getTime();  
+			int days = (int) ((from - to)/(1000 * 60 * 60 * 24));
+			cc.put("days", days);
+		}
 		
 		
 		return cl;
