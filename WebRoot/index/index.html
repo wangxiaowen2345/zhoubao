@@ -19,7 +19,7 @@
  <div id="main1" style="float:left;width: 600px;height:400px;"></div>
  <div class="content-list">
              #for(x:contractById(admin_user.id))
-             #if(x.days>0)
+             #if(x.days>=0&&x.days<7)
              	<font color="#ff0000">(距付款时间还有#(x.days)天)</font>由您发起的合同<font color="#ff0000">（#(x.conname)）</font>：</span>开始时间为：#date(x.starttime,"yyyy-MM-dd") 付款时间为：#date(x.paytime,"yyyy-MM-dd")
              	<br>
              #end
