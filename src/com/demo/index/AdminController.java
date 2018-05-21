@@ -687,6 +687,13 @@ public class AdminController extends Controller {
 		String partybtel = this.getPara("partybtel");
 		String starttime = this.getPara("starttime");
 		String paytime = this.getPara("paytime");
+		String paytime1 = this.getPara("paytime1");
+		String paytime2 = this.getPara("paytime2");
+		String paytime3 = this.getPara("paytime3");
+		String pay = this.getPara("pay");
+		String pay1 = this.getPara("pay1");
+		String pay2 = this.getPara("pay2");
+		String pay3 = this.getPara("pay3");
 		String beizhu = this.getPara("beizhu");
 		User a1 = this.getSessionAttr("admin_user");
 		
@@ -701,8 +708,24 @@ public class AdminController extends Controller {
 		c.setPartyatel(partyatel);
 		c.setPartybtel(partybtel);
 		c.setStarttime(s.parse(starttime));
-		c.setPaytime(s.parse(paytime));
 		c.setUserid(Integer.toString(a1.getId()));
+		
+		if (paytime!="") {
+			c.setPaytime(s.parse(paytime));
+			c.setPay(pay);
+		} 
+		if(paytime1!=""){
+			c.setPaytime1(s.parse(paytime1));
+			c.setPay1(pay1);
+		}
+		if(paytime2!=""){
+			c.setPaytime2(s.parse(paytime2));
+			c.setPay2(pay2);
+		}
+		if(paytime3!=""){
+			c.setPaytime3(s.parse(paytime3));
+			c.setPay3(pay3);
+		}
 		c.save();
 		
 		this.renderJson(new Record().set("code", 200).set("msg", "操作成功！"));
@@ -1198,12 +1221,55 @@ public class AdminController extends Controller {
 		ContractService c = new ContractService();
 		List<Contract> cl = c.selectAllByUserid(id);
 		for(Contract cc:cl){
-			String fromDate = s.format(cc.getPaytime());  
-			String toDate = s.format(new Date());  
-			long from = s.parse(fromDate).getTime();  
-			long to = s.parse(toDate).getTime();  
-			int days = (int) ((from - to)/(1000 * 60 * 60 * 24));
+			int days = -1;
 			cc.put("days", days);
+			if(cc.getPaytime3()!=null){
+				String fromDate = s.format(cc.getPaytime3());  
+				String toDate = s.format(new Date());  
+				long from = s.parse(fromDate).getTime();  
+				long to = s.parse(toDate).getTime();  
+				days = (int) ((from - to)/(1000 * 60 * 60 * 24));
+				if(7>days&&days>=0){
+					cc.put("days", days);
+				}
+			}
+			
+			if(cc.getPaytime2()!=null){
+				String fromDate = s.format(cc.getPaytime2());  
+				String toDate = s.format(new Date());  
+				long from = s.parse(fromDate).getTime();  
+				long to = s.parse(toDate).getTime();  
+				days = (int) ((from - to)/(1000 * 60 * 60 * 24));
+				if(7>days&&days>=0){
+					cc.put("days", days);
+				}
+			}
+			
+			
+			if(cc.getPaytime1()!=null){
+				String fromDate = s.format(cc.getPaytime1());  
+				String toDate = s.format(new Date());  
+				long from = s.parse(fromDate).getTime();  
+				long to = s.parse(toDate).getTime();  
+				days = (int) ((from - to)/(1000 * 60 * 60 * 24));
+				if(7>days&&days>=0){
+					cc.put("days", days);
+				}
+			}
+			
+			if(cc.getPaytime()!=null){
+				String fromDate = s.format(cc.getPaytime());  
+				String toDate = s.format(new Date());  
+				long from = s.parse(fromDate).getTime();  
+				long to = s.parse(toDate).getTime();  
+				days = (int) ((from - to)/(1000 * 60 * 60 * 24));
+				if(7>days&&days>=0){
+					cc.put("days", days);
+				}
+				
+			}
+			
+			
 		}
 		
 		

@@ -45,7 +45,7 @@
 	                               <td class="w10">甲方</td>
 	                               <td class="w10">乙方</td>
 	                               <td class="w10">合同开始时间</td>
-	                               <td class="w10">合同付款时间</td>
+	                               <td class="w10">合同时间节点</td>
 	                               <td class="w10">备注</td>
 	                               <td class="w15">操作</td>
 	                             </tr>
@@ -105,7 +105,17 @@
 		                              <td>#(x.partya)(#(x.partyatel))</td>
 		                              <td>#(x.partyb)(#(x.partybtel))</td>
 		                              <td>#date(x.starttime,"yyyy-MM-dd")</td>
-		                              <td>#date(x.paytime,"yyyy-MM-dd")</td>
+		                              <td>#date(x.paytime,"yyyy-MM-dd") 金额：#(x.pay)<br>
+		                              #if(x.paytime1??)
+		                              #date(x.paytime1,"yyyy-MM-dd") 金额：#(x.pay1)<br>
+		                              #end
+		                              #if(x.paytime2??)
+		                              #date(x.paytime2,"yyyy-MM-dd") 金额：#(x.pay2)<br>
+		                              #end
+		                              #if(x.paytime3??)
+		                              #date(x.paytime3,"yyyy-MM-dd") 金额：#(x.pay3)<br>
+		                              #end
+		                              </td>
 		                              <td>#(x.beizhu)</td>
 		                              <td>
 										<a href="javascript:void(0);" onclick="delcontract(#(x.id))">删除</a>
@@ -127,7 +137,7 @@
 				</div>
 			</div>
 			<div id="dialogBg"></div>
-				<div id="dialog" class="animated" style="width: 500px;">
+				<div id="dialog" class="animated" style="width: 500px;top: 23%;">
 					<div class="dialogTop">
 						<a href="javascript:window.location.reload();" class="claseDialogBtn">关闭</a>
 					</div>
@@ -139,7 +149,14 @@
 							<li><label><font color="#ff0000">*</font>乙方名字：<input type="text" id="partyb" required value="" class="ipt" /></label></li>
 							<li><label><font color="#ff0000">*</font>乙方手机号：<input type="text" id="partybtel" required value="" class="ipt" /></label></li>
 							<li><label><font color="#ff0000">*</font>合同开始时间：<input type="text" id="starttime"  class="ipt" /></label></li>
-							<li><label><font color="#ff0000">*</font>合同付款时间：<input type="text" id="paytime" class="ipt" /></label></li>
+							<li><label><font color="#ff0000">*</font>合同付款时间一阶段：<input type="text" id="paytime" class="ipt" /></label></li>
+							<li><label><font color="#ff0000">*</font>合同一阶段付款金额：<input type="text" id="pay" class="ipt" /></label></li>
+							<li><label>(可选)合同付款时间二阶段：<input type="text" id="paytime1" class="ipt" /></label></li>
+							<li><label>(可选)合同二阶段付款金额：<input type="text" id="pay1" class="ipt" /></label></li>
+							<li><label>(可选)合同付款时间三阶段：<input type="text" id="paytime2" class="ipt" /></label></li>
+							<li><label>(可选)合同三阶段付款金额：<input type="text" id="pay2" class="ipt" /></label></li>
+							<li><label>(可选)合同付款时间四阶段：<input type="text" id="paytime3" class="ipt" /></label></li>
+							<li><label>(可选)合同四阶段付款金额：<input type="text" id="pay3" class="ipt" /></label></li>
 							
 							<li><label style="line-height: 20px;text-align: center;">(可选)备注：</label></li>
 							<li><label><textarea class="ipt" style="width: 400px" id="beizhu"></textarea></label></li>
@@ -161,6 +178,19 @@
 	  //执行一个laydate实例
 	  laydate.render({
 	    elem: '#paytime' //指定元素
+	  });
+	  
+	  //执行一个laydate实例
+	  laydate.render({
+	    elem: '#paytime1' //指定元素
+	  });
+	  //执行一个laydate实例
+	  laydate.render({
+	    elem: '#paytime2' //指定元素
+	  });
+	  //执行一个laydate实例
+	  laydate.render({
+	    elem: '#paytime3' //指定元素
 	  });
 	});
 	  
@@ -206,6 +236,13 @@
 	var partybtel = $("#partybtel").val();
 	var starttime = $("#starttime").val();
 	var paytime = $("#paytime").val();
+	var paytime1 = $("#paytime1").val();
+	var paytime2 = $("#paytime2").val();
+	var paytime3 = $("#paytime3").val();
+	var pay = $("#pay").val();
+	var pay1 = $("#pay1").val();
+	var pay2 = $("#pay2").val();
+	var pay3 = $("#pay3").val();
 	var beizhu = $("#beizhu").val();
 	
 	
@@ -216,7 +253,7 @@
           } 
        var reg = /^\s*$/g;
 			//  如果是空，或者""
-			if(name=="" || reg.test(name)||partya=="" || reg.test(partya)||partyb=="" || 
+			if(name=="" || reg.test(name)||pay=="" || reg.test(pay)||partya=="" || reg.test(partya)||partyb=="" || 
 			reg.test(partyb)||starttime=="" || reg.test(starttime)||paytime=="" || reg.test(paytime)){
 			alert("请完善表格！");
               return false;  
@@ -225,7 +262,9 @@
 	
 		$.post("/addcontract",{name:$("#name").val(),partya:$("#partya").val(),
 		partyb:$("#partyb").val(),partyatel:$("#partyatel").val(),partybtel:$("#partybtel").val(),
-		starttime:$("#starttime").val(),paytime:$("#paytime").val(),beizhu:$("#beizhu").val()},
+		starttime:$("#starttime").val(),paytime:$("#paytime").val(),paytime1:$("#paytime1").val(),
+		paytime2:$("#paytime2").val(),paytime3:$("#paytime3").val(),pay:$("#pay").val(),
+		pay1:$("#pay1").val(),pay2:$("#pay2").val(),pay3:$("#pay3").val(),beizhu:$("#beizhu").val()},
 		function(data){
 			if(data.code=="200"){
 				alert(data.msg);

@@ -90,6 +90,69 @@ public abstract class BaseContract<M extends BaseContract<M>> extends Model<M> i
 		return get("paytime");
 	}
 
+	public M setPay(java.lang.String pay) {
+		set("pay", pay);
+		return (M)this;
+	}
+	
+	public java.lang.String getPay() {
+		return getStr("pay");
+	}
+
+	public M setPaytime1(java.util.Date paytime1) {
+		set("paytime1", paytime1);
+		return (M)this;
+	}
+	
+	public java.util.Date getPaytime1() {
+		return get("paytime1");
+	}
+
+	public M setPay1(java.lang.String pay1) {
+		set("pay1", pay1);
+		return (M)this;
+	}
+	
+	public java.lang.String getPay1() {
+		return getStr("pay1");
+	}
+
+	public M setPaytime2(java.util.Date paytime2) {
+		set("paytime2", paytime2);
+		return (M)this;
+	}
+	
+	public java.util.Date getPaytime2() {
+		return get("paytime2");
+	}
+
+	public M setPay2(java.lang.String pay2) {
+		set("pay2", pay2);
+		return (M)this;
+	}
+	
+	public java.lang.String getPay2() {
+		return getStr("pay2");
+	}
+
+	public M setPaytime3(java.util.Date paytime3) {
+		set("paytime3", paytime3);
+		return (M)this;
+	}
+	
+	public java.util.Date getPaytime3() {
+		return get("paytime3");
+	}
+
+	public M setPay3(java.lang.String pay3) {
+		set("pay3", pay3);
+		return (M)this;
+	}
+	
+	public java.lang.String getPay3() {
+		return getStr("pay3");
+	}
+
 	public M setIstrue(java.lang.String istrue) {
 		set("istrue", istrue);
 		return (M)this;
