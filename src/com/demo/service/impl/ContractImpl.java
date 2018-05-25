@@ -7,7 +7,7 @@ import com.jfinal.plugin.activerecord.Page;
 
 public interface ContractImpl {
 
-	public Page<Contract> paginate(int pageNumber, int pageSize);
+	public Page<Contract> paginate(int pageNumber, int pageSize,String userid);
 	
 	public List<Contract> selectAll();
 }

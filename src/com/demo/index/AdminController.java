@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -305,8 +306,37 @@ public class AdminController extends Controller {
 		setDate();
 		
 		ContractService cs = new ContractService();
+		User a = this.getSessionAttr("admin_user");
+		String sql = "";
 		
-		this.setAttr("list", cs.paginate(getParaToInt(0, 1), Conts.PageSize));
+		if("0".equals(a.getPower())){
+			
+			sql = " and userid="+a.getPower();
+			this.setAttr("list", cs.paginate(getParaToInt(0, 1), Conts.PageSize,sql));
+		}
+		else if("3".equals(a.getPower()))
+		{
+			this.setAttr("list", cs.paginate(getParaToInt(0, 1), Conts.PageSize,""));
+		}
+		else{
+			List<User> ul = new ArrayList<User>();
+			UserService us = new UserService();
+			ul = us.selectAllByDep(a.getPower());
+
+			StringBuffer b = new StringBuffer();
+			b.append(" and (");
+			
+			for (User u : ul) {
+				b.append(" userid="+u.getId()+" or ");
+				System.out.println(u.getId()+u.getUsername());
+				System.out.println(b.toString());
+			}
+			b.append(" userid=0) ");
+			
+			System.out.println(b.toString());
+			this.setAttr("list", cs.paginate(getParaToInt(0, 1), Conts.PageSize,b.toString()));
+		}
+		
 		this.setAttr("admin_user", this.getSessionAttr("admin_user"));
 		this.setAttr("navmsg", "contract");
 		this.render("contractInfo.html");
@@ -687,6 +717,7 @@ public class AdminController extends Controller {
 		String partybtel = this.getPara("partybtel");
 		String starttime = this.getPara("starttime");
 		String paytime = this.getPara("paytime");
+		String leadtime = this.getPara("leadtime");
 		String paytime1 = this.getPara("paytime1");
 		String paytime2 = this.getPara("paytime2");
 		String paytime3 = this.getPara("paytime3");
@@ -725,6 +756,9 @@ public class AdminController extends Controller {
 		if(paytime3!=""){
 			c.setPaytime3(s.parse(paytime3));
 			c.setPay3(pay3);
+		}
+		if(leadtime!=""){
+			c.setLeadtime(s.parse(leadtime));
 		}
 		c.save();
 		

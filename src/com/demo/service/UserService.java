@@ -18,6 +18,11 @@ public class UserService implements UserImpl{
 			
 	}
 	
+	public List<User> selectAllByDep(String depid){
+		return User.dao.find("select * from user where depid=?",depid);
+			
+	}
+	
 	public User selectById(String id){
 		return User.dao.findById(id);
 			

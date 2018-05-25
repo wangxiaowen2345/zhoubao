@@ -115,6 +115,9 @@
 		                              #if(x.paytime3??)
 		                              #date(x.paytime3,"yyyy-MM-dd") 金额：#(x.pay3)<br>
 		                              #end
+		                              #if(x.leadtime??)
+		                            	  最终交付时间：#date(x.leadtime,"yyyy-MM-dd")<br>
+		                              #end
 		                              </td>
 		                              <td>#(x.beizhu)</td>
 		                              <td>
@@ -151,6 +154,7 @@
 							<li><label><font color="#ff0000">*</font>合同开始时间：<input type="text" id="starttime"  class="ipt" /></label></li>
 							<li><label><font color="#ff0000">*</font>合同付款时间一阶段：<input type="text" id="paytime" class="ipt" /></label></li>
 							<li><label><font color="#ff0000">*</font>合同一阶段付款金额：<input type="text" id="pay" class="ipt" /></label></li>
+							<li><label>(可选)最终交付时间：<input type="text" id="leadtime" class="ipt" /></label></li>
 							<li><label>(可选)合同付款时间二阶段：<input type="text" id="paytime1" class="ipt" /></label></li>
 							<li><label>(可选)合同二阶段付款金额：<input type="text" id="pay1" class="ipt" /></label></li>
 							<li><label>(可选)合同付款时间三阶段：<input type="text" id="paytime2" class="ipt" /></label></li>
@@ -191,6 +195,10 @@
 	  //执行一个laydate实例
 	  laydate.render({
 	    elem: '#paytime3' //指定元素
+	  });
+	  //执行一个laydate实例
+	  laydate.render({
+	    elem: '#leadtime' //指定元素
 	  });
 	});
 	  
@@ -239,6 +247,7 @@
 	var paytime1 = $("#paytime1").val();
 	var paytime2 = $("#paytime2").val();
 	var paytime3 = $("#paytime3").val();
+	var leadtime = $("#leadtime").val();
 	var pay = $("#pay").val();
 	var pay1 = $("#pay1").val();
 	var pay2 = $("#pay2").val();
@@ -262,9 +271,9 @@
 	
 		$.post("/addcontract",{name:$("#name").val(),partya:$("#partya").val(),
 		partyb:$("#partyb").val(),partyatel:$("#partyatel").val(),partybtel:$("#partybtel").val(),
-		starttime:$("#starttime").val(),paytime:$("#paytime").val(),paytime1:$("#paytime1").val(),
-		paytime2:$("#paytime2").val(),paytime3:$("#paytime3").val(),pay:$("#pay").val(),
-		pay1:$("#pay1").val(),pay2:$("#pay2").val(),pay3:$("#pay3").val(),beizhu:$("#beizhu").val()},
+		starttime:$("#starttime").val(),leadtime:$("#leadtime").val(),paytime:$("#paytime").val(),
+		paytime1:$("#paytime1").val(),paytime2:$("#paytime2").val(),paytime3:$("#paytime3").val(),
+		pay:$("#pay").val(),pay1:$("#pay1").val(),pay2:$("#pay2").val(),pay3:$("#pay3").val(),beizhu:$("#beizhu").val()},
 		function(data){
 			if(data.code=="200"){
 				alert(data.msg);

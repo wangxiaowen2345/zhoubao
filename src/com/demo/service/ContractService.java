@@ -8,8 +8,8 @@ import com.jfinal.plugin.activerecord.Page;
 
 public class ContractService implements ContractImpl{
 
-	public Page<Contract> paginate(int pageNumber, int pageSize) {
-		return Contract.dao.paginate(pageNumber, pageSize, "select *", " from contract where istrue=0");
+	public Page<Contract> paginate(int pageNumber, int pageSize,String userid) {
+		return Contract.dao.paginate(pageNumber, pageSize, "select *", " from contract where istrue=0 "+userid);
 	}
 
 	public List<Contract> selectAll(){
@@ -18,7 +18,7 @@ public class ContractService implements ContractImpl{
 	}
 	
 	public List<Contract> selectAllByUserid(int userid){
-		return Contract.dao.find("select * from contract where userid=?",userid);
+		return Contract.dao.find("select * from contract where istrue=0 and userid=?",userid);
 			
 	}
 

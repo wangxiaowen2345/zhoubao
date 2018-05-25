@@ -180,4 +180,13 @@ public abstract class BaseContract<M extends BaseContract<M>> extends Model<M> i
 		return getStr("userid");
 	}
 
+	public M setLeadtime(java.util.Date leadtime) {
+		set("leadtime", leadtime);
+		return (M)this;
+	}
+	
+	public java.util.Date getLeadtime() {
+		return get("leadtime");
+	}
+
 }
